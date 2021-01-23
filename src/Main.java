@@ -16,17 +16,7 @@ public class Main {
 
         Scanner s = new Scanner(System.in);
         String rallyCount;
-        Map<String, String> rallyMap = new HashMap<>();
-        List<String> ralliesList = new LinkedList<>(Arrays.asList(rallies));
-        List<String> classesList = new LinkedList<>(Arrays.asList(classes));
-
-        boolean repeatClasses = false; // false for different car class @ each rally
-
-        Random r = new Random();
-
-        int rallyIndex;
-        int classIndex;
-
+        String uniqueClasses; // 1 for different car class @ each rally
 
 
         do {
@@ -35,34 +25,21 @@ public class Main {
 
             rallyCount = s.nextLine();
 
-        }while (!rallyCount.chars().allMatch( Character::isDigit ) || Integer.parseInt(rallyCount) < 1 || Integer.parseInt(rallyCount) > rallies.length);
+        }while (!rallyCount.chars().allMatch( Character::isDigit ) || Integer.parseInt(rallyCount) < 1);
+
+        System.out.println("Do you want unique car classes for each rally? (1 for unique car class at each rally, other number for random)");
+        uniqueClasses = s.nextLine();
+
+        RallySeason rallySeason = new RallySeason(Arrays.asList(rallies), Arrays.asList(classes));
 
 
-        for (int i = 0; i < Integer.parseInt(rallyCount); i++) {
-            rallyIndex = r.nextInt(ralliesList.size());
-            classIndex = r.nextInt(classesList.size());
-
-            rallyMap.put(ralliesList.get(rallyIndex), classesList.get(classIndex));
-
-            ralliesList.remove(rallyIndex);
-
-            if (!repeatClasses){
-                classesList.remove(classIndex);
-            }
-
-        }
-
-        rallyPrinter(rallyMap);
+        rallySeason.generateSeason(Integer.parseInt(rallyCount), uniqueClasses.equals("1"));
+        rallySeason.rallyPrinter();
 
 
 
 
     }
 
-    public static void rallyPrinter (Map<String, String> rallyMap){
-        for (Map.Entry<String, String> entry : rallyMap.entrySet()){
-            System.out.format("%-13s" + " @ " + entry.getKey() + "\n", entry.getValue());
-//            System.out.format("%0$-10s" + " @ " + entry.getKey() ,entry.getValue()); // 0$ indicates argument index
-        }
-    }
+
 }
